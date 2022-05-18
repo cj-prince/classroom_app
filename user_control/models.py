@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 
 
 
+
 class CustomUserManager(BaseUserManager):
   def create_user(self, email, password, **kwargs):
     
@@ -79,4 +80,7 @@ class Teacher(DateAbstract):
   def __str__(self):
       return self.user.email
   
-  
+# FileStorage
+
+class FileUpload(models.Model):
+  file = models.FileField()
