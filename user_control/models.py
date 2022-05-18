@@ -1,4 +1,5 @@
 import email
+from tkinter import CASCADE
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
@@ -36,8 +37,6 @@ class DateAbstract(models.Model):
     
 
 class CustomUser(AbstractBaseUser, PermissionsMixin, DateAbstract):
-  first_name = models.CharField(max_length=100)
-  last_name = models.CharField(max_length=100)
   is_staff = models.BooleanField(default=False)
   email = models.EmailField(unique=True)
   
@@ -46,3 +45,38 @@ class CustomUser(AbstractBaseUser, PermissionsMixin, DateAbstract):
   
   def __str__(self): #string representation 
       return self.email
+    
+# Userprofile
+
+class UserProfile(DateAbstract):
+  user = models.OneToOneField(CustomUser, related_name='user_profile', on_delete=models.CASCADE)
+  first_name = models.CharField(max_length=100)
+  last_name = models.CharField(max_length=100)
+  gender = models.CharField(max_length=6, choices=(('male', 'male'), ('female', 'female')))
+  dob = models.DateField()
+  phone = models.PositiveBigIntegerField()
+  city = models.CharField(max_length=50)
+  region = models.CharField(max_length=100)
+  address = models.TextField()
+  
+  def __str__(self):
+      return self.user.email
+    
+class Student(DateAbstract):
+  about = models.TextField()
+  username = models.CharField(max_length=50, unique=True)
+  user = models.OneToOneField(CustomUser, related_name='student_profile', on_delete=models.CASCADE)
+  
+  def __str__(self):
+      return self.user.email
+    
+class Teacher(DateAbstract):
+  about = models.TextField()
+  user = models.OneToOneField(CustomUser, related_name='teacher_profile', on_delete=models.CASCADE)
+  qualification = models.CharField(max_length=5, )
+  yof = models.PositiveSmallIntegerField()
+  
+  def __str__(self):
+      return self.user.email
+  
+  
